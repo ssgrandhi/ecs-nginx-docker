@@ -1,0 +1,54 @@
+pipeline {
+    agent any
+
+    environment {
+        AWS_DEFAULT_REGION = "us-east-1"
+        ECS_CLUSTER = "ecs-cluster"
+        ECS_SERVICE = "ecs-service1"
+		REPO = "343755987196.dkr.ecr.us-east-1.amazonaws.com"
+		AWS_ECS_TASK_DEFINITION = "ecs-task1"
+	    TASK_FAMILY = "ecs-task1"
+		taskRevision = "1"
+    	DESIRED_COUNT = "3"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+               // git 'https://github.com/ssgrandhi/ecs-nginx-docker.git'
+				git branch: 'main', credentialsId: 'git', url: 'https://github.com/ssgrandhi/ecs-nginx-docker.git'
+            }
+       }
+    
+    stage('Build') {
+        steps {
+                sh 'docker build -t nginx .'
+              }
+        }
+    stage('Push to ECR') {
+            steps {
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'my-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+                    sh 'eval $(aws ecr get-login --no-include-email --region ${AWS_DEFAULT_REGION})'
+                    sh 'docker tag nginx:latest ${REPO}/ecsproject:latest'
+                    sh 'docker push ${REPO}/ecsproject:latest'
+                }
+            }
+        }    
+    stage('Deploy to ECS') {
+            steps {
+                script {
+                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'my-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+                   sh " aws ecs list-services --cluster ${ECS_CLUSTER}"
+                   sh "aws ecs update-service --cluster ${ECS_CLUSTER} --service ${ECS_SERVICE} --force-new-deployment --task-definition ${AWS_ECS_TASK_DEFINITION}:${taskRevision} --desired-count ${DESIRED_COUNT} --region ${AWS_DEFAULT_REGION}"
+                   sh "aws ecs update-service --cluster ${ECS_CLUSTER} --service ${ECS_SERVICE} --force-new-deployment --task-definition ${AWS_ECS_TASK_DEFINITION} --desired-count ${DESIRED_COUNT} --region ${AWS_DEFAULT_REGION}"
+                  //  --task-definition ${AWS_ECS_TASK_DEFINITION}:${taskRevision}   if you wnat mention specific revision on task definitation to service.
+                        
+                    }
+                }
+            } 
+            
+        
+    }
+    
+ }
+}
