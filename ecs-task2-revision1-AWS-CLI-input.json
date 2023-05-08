@@ -1,0 +1,46 @@
+{
+    "family": "ecs-task2",
+    "containerDefinitions": [
+        {
+            "name": "nginx-latest",
+            "image": "343755987196.dkr.ecr.us-east-1.amazonaws.com/ecsproject:latest-33",
+            "cpu": 0,
+            "portMappings": [
+                {
+                    "name": "nginx-latest-80-tcp",
+                    "containerPort": 80,
+                    "hostPort": 0,
+                    "protocol": "tcp",
+                    "appProtocol": "http"
+                }
+            ],
+            "essential": true,
+            "environment": [],
+            "environmentFiles": [],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "ulimits": [],
+            "healthCheck": {
+                "command": [
+                    "CMD-SHELL",
+                    "curl http://localhost/index.html ||exit"
+                ],
+                "interval": 5,
+                "timeout": 5,
+                "retries": 3
+            }
+        }
+    ],
+    "taskRoleArn": "arn:aws:iam::343755987196:role/ecsTaskExecutionRole",
+    "executionRoleArn": "arn:aws:iam::343755987196:role/ecsTaskExecutionRole",
+    "networkMode": "bridge",
+    "requiresCompatibilities": [
+        "EC2"
+    ],
+    "cpu": "256",
+    "memory": "512",
+    "runtimePlatform": {
+        "cpuArchitecture": "X86_64",
+        "operatingSystemFamily": "LINUX"
+    }
+}
