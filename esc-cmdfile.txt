@@ -1,0 +1,5 @@
+sh "aws ecs register-task-definition --family taskdef-name --container-definitions '[{\"name\":\"container-name\",\"image\":\"docker-image-url\",\"portMappings\":[{\"containerPort\":80,\"protocol\":\"tcp\"}],\"environment\":[{\"name\":\"ENV_VAR_NAME\",\"value\":\"ENV_VAR_VALUE\"}]}]'"
+
+sh "aws ecs create-service --cluster cluster-name --service-name service-name --desired-count 2 --launch-type FARGATE --task-definition taskdef-name"
+
+https://github.com/allcloud-io/jenkins-pipeline-tutorial
