@@ -3,7 +3,7 @@
     "containerDefinitions": [
         {
             "name": "nginx1",
-            "image": "nginx2:latest",
+            "image": "343755987196.dkr.ecr.us-east-1.amazonaws.com/eksproject:nginx",
             "cpu": 0,
             "portMappings": [
                 {
