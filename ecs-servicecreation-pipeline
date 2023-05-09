@@ -1,0 +1,44 @@
+#ecs taskdefinitation and service creation 
+pipeline {
+    agent any
+
+    environment {
+        AWS_DEFAULT_REGION = "us-east-1"
+        ECS_CLUSTER = "rga"
+        ECS_SERVICE = "ecs-service2"
+		REPO = "343755987196.dkr.ecr.us-east-1.amazonaws.com"
+		AWS_ECS_TASK_DEFINITION = "ecs-task2"
+	    TASK_FAMILY = "ecs-task2"
+	    AWS_ECS_EXECUTION_ROL = "ecsTaskExecutionRole"
+	//	taskRevision = "1"
+    	DESIRED_COUNT = "2"
+    	ECR_REPO_NAME = "ecsproject"
+   
+    	NEW_ECR_IMAGE = "343755987196.dkr.ecr.us-east-1.amazonaws.com/ecsproject:latest-33"
+    
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+               // git 'https://github.com/ssgrandhi/ecs-nginx-docker.git'
+			git branch: 'main', credentialsId: 'git', url: 'https://github.com/ssgrandhi/ecs-nginx-docker.git'
+            }
+       }
+   
+        
+    stage('Deploy to ECS') {
+            steps {
+                script {
+                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'my-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+                 //   sh 'aws ecs describe-task-definition --task-definition ecs-task1 | jq \'.taskDefinition | .containerDefinitions[0].image=env.NEW_ECR_IMAGE | del(.taskDefinitionArn) | del(.revision) | del(.status) | del(.requiresAttributes) | del(.compatibilities) | del(.registeredAt) | del(.registeredBy)\' > task5.json'
+                  sh 'aws ecs register-task-definition --family ecs-task4 --cli-input-json file://${WORKSPACE}/${JOB}task-farget-revision1-AWS-CLI-input.json'
+                 sh  "aws ecs create-service --cluster ${ECS_CLUSTER} --service-name ${ECS_SERVICE} --desired-count 2 --launch-type FARGATE --task-definition ecs-task4 --network-configuration 'awsvpcConfiguration={subnets=[subnet-0796546a06e67a6ef,subnet-0b8f2c6d4c4028700],securityGroups=[sg-0d1172bfc10ab579d],assignPublicIp=ENABLED}' --load-balancers 'targetGroupArn=arn:aws:elasticloadbalancing:us-east-1:343755987196:targetgroup/target2/b560fef9ae48cbc0,containerName=nginx1,containerPort=80' "
+        // sh "aws ecs update-service --cluster ${ECS_CLUSTER} --service ${ECS_SERVICE} --force-new-deployment --task-definition ecs-task4 --desired-count ${DESIRED_COUNT} --region ${AWS_DEFAULT_REGION} "
+                    }
+                }
+            } 
+       } 
+    }
+  }
+
