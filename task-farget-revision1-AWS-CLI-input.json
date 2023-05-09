@@ -1,0 +1,55 @@
+{
+    "family": "task-farget",
+    "containerDefinitions": [
+        {
+            "name": "nginx1",
+            "image": "343755987196.dkr.ecr.us-east-1.amazonaws.com/ecsproject@sha256:aaf3d3098b049e4c8b0ccfe49488a77cd84e312acfe2675f98cee4ba99559d68",
+            "cpu": 0,
+            "portMappings": [
+                {
+                    "name": "nginx1-80-tcp",
+                    "containerPort": 80,
+                    "hostPort": 80,
+                    "protocol": "tcp",
+                    "appProtocol": "http"
+                }
+            ],
+            "essential": true,
+            "environment": [],
+            "environmentFiles": [],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "ulimits": [],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/task-farget",
+                    "awslogs-create-group": "true",
+                    "awslogs-region": "us-east-1",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            },
+            "healthCheck": {
+                "command": [
+                    "CMD-SHELL",
+                    "curl http://localhost/index.html ||exit"
+                ],
+                "interval": 30,
+                "timeout": 5,
+                "retries": 3
+            }
+        }
+    ],
+    "taskRoleArn": "arn:aws:iam::343755987196:role/ecsTaskExecutionRole",
+    "executionRoleArn": "arn:aws:iam::343755987196:role/ecsTaskExecutionRole",
+    "networkMode": "awsvpc",
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "512",
+    "memory": "1024",
+    "runtimePlatform": {
+        "cpuArchitecture": "X86_64",
+        "operatingSystemFamily": "LINUX"
+    }
+}
