@@ -9,4 +9,9 @@ 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   //token
 sh "aws ecs create-service --cluster my-cluster --service-name my-service --desired-count 2 --launch-type FARGATE --network-configuration 'awsvpcConfiguration={subnets=[subnet-1234,subnet-5678],securityGroups=[sg-1234],assignPublicIp=ENABLED},aliases=[{name=my-service.example.com,targetGroupArn=arn:aws:elasticloadbalancing:us-west-2:123456789012:targetgroup/my-target-group/abcdef1234567890}]' --load-balancers 'targetGroupArn=arn:aws:elasticloadbalancing:us-west-2:123456789012:targetgroup/my-target-group/abcdef1234567890,containerName=my-container,containerPort=80'"
 
 
+Without Alias
+sh "aws ecs create-service --cluster my-cluster --service-name my-service --desired-count 2 --launch-type FARGATE --network-configuration 'awsvpcConfiguration={subnets=[subnet-1234,subnet-5678],securityGroups=[sg-1234],assignPublicIp=ENABLED}' --load-balancers 'targetGroupArn=arn:aws:elasticloadbalancing:us-west-2:123456789012:targetgroup/my-target-group/abcdef1234567890,containerName=my-container,containerPort=80'"
+
+
+
 
