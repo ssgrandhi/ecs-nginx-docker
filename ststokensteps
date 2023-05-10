@@ -1,0 +1,17 @@
+def roleArn = '<arn of assumed role>'
+def sessionName = 'my-session'
+def durationSeconds = 3600
+def stsResponse = sh(
+    returnStdout: true,
+    script: "aws sts assume-role --role-arn ${roleArn} --role-session-name ${sessionName} --duration-seconds ${durationSeconds}"
+)
+def accessKeyId = sh(returnStdout: true, script: "echo '${stsResponse}' | jq -r '.Credentials.AccessKeyId'")
+def secretAccessKey = sh(returnStdout: true, script: "echo '${stsResponse}' | jq -r '.Credentials.SecretAccessKey'")
+def sessionToken = sh(returnStdout: true, script: "echo '${stsResponse}' | jq -r '.Credentials.SessionToken'")
+
+withCredentials([
+    [$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'my-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'],
+    [$class: 'StringBinding', variable: 'AWS_SESSION_TOKEN', value: sessionToken]
+]) {
+    // Your Jenkins build steps here
+}
