@@ -1,0 +1,48 @@
+aws ecs register-task-definition --cli-input-json '{
+  "family": "my-task-def",
+  "containerDefinitions": [
+    {
+      "name": "my-container",
+      "image": "my-registry/my-image",
+      "portMappings": [
+        {
+          "containerPort": 80
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "my-log-group",
+          "awslogs-region": "us-west-2",
+          "awslogs-stream-prefix": "my-prefix"
+        }
+      }
+    }
+  ],
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "executionRoleArn": "arn:aws:iam::123456789012:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::123456789012:role/ecsTaskRole",
+  "cpu": "256",
+  "memory": "512",
+  "tags": [
+    {
+      "key": "env",
+      "value": "prod"
+    }
+  ],
+  "placementConstraints": [
+    {
+      "type": "memberOf",
+      "expression": "attribute:ecs.availability-zone==us-west-2a"
+    }
+  ],
+  "requiresAttributes": [
+    {
+      "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
+    }
+  ],
+  "targetGroupArn": "arn:aws:elasticloadbalancing:us-west-2:123456789012:targetgroup/my-target-group/abcdef1234567890"
+}'
