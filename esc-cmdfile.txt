@@ -24,7 +24,16 @@ sh """
 """
 
 
-
+ sh """
+                    aws ecs create-service \\
+                    --cluster ${ECS_CLUSTER} \\
+                    --service-name ${ECS_SERVICE} \\
+                    --desired-count 2 \\
+                    --launch-type FARGATE \\
+                    --task-definition ecs-task4 \\
+                    --network-configuration "awsvpcConfiguration={subnets=[${SUBNETS}],securityGroups=[${SECURITY_GROUPS}],assignPublicIp=ENABLED}" \\
+                    --load-balancers '[{"targetGroupArn":"${TARGET_GROUP_ARN}","containerName":"nginx1","containerPort":80}]'
+                """
 
 
 
