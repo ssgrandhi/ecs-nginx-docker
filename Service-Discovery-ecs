@@ -1,0 +1,62 @@
+aws servicediscovery create-private-dns-namespace \
+      --name rga.com \
+      --vpc vpc-06cb9af2070a1f70a
+
+
+OperationId": "a6vtvpylhwfwt27g3eed3visend7j4oe-6dsg4fvy"
+
+
+2.aws servicediscovery get-operation \
+      --operation-id a6vtvpylhwfwt27g3eed3visend7j4oe-6dsg4fvy
+
+o/p
+{
+    "Operation": {
+        "Id": "a6vtvpylhwfwt27g3eed3visend7j4oe-6dsg4fvy",
+        "Type": "CREATE_NAMESPACE",
+        "Status": "SUCCESS",
+        "CreateDate": "2023-05-15T13:34:40.290000+00:00",
+        "UpdateDate": "2023-05-15T13:35:17.041000+00:00",
+        "Targets": {
+            "NAMESPACE": "ns-6o5yhzaofxj2of64"
+        }
+    }
+}
+
+3.aws servicediscovery create-service \
+      --name myapplication-rga \
+      --dns-config "NamespaceId="ns-6o5yhzaofxj2of64",DnsRecords=[{Type="A",TTL="30"}]" \
+      --health-check-custom-config FailureThreshold=1
+
+
+o/p
+{
+    "Service": {
+        "Id": "srv-7panefqbf6ohpzvj",
+        "Arn": "arn:aws:servicediscovery:us-east-1:343755987196:service/srv-7panefqbf6ohpzvj",
+        "Name": "myapplication-rga",
+        "NamespaceId": "ns-6o5yhzaofxj2of64",
+        "DnsConfig": {
+            "NamespaceId": "ns-6o5yhzaofxj2of64",
+            "RoutingPolicy": "MULTIVALUE",
+            "DnsRecords": [
+                {
+                    "Type": "A",
+                    "TTL": 30
+                }
+            ]
+        },
+        "Type": "DNS_HTTP",
+        "HealthCheckCustomConfig": {
+            "FailureThreshold": 1
+        },
+        "CreateDate": "2023-05-15T13:38:20.338000+00:00",
+        "CreatorRequestId": "fb477e6b-ca41-4d83-b605-40db17842d99"
+    }
+}
+
+4. cluster creation
+5.task definition creation
+6. service creation
+aws ecs create-service \
+      --cli-input-json file://ecs-service-discovery.json 
