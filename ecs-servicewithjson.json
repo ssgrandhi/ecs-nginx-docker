@@ -1,0 +1,36 @@
+{
+  "serviceName": "my-ecs-service",
+  "taskDefinition": "farget-test",
+  "loadBalancers": [
+    {
+      "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:343755987196:targetgroup/rga-target/30fe1cfc59976fcb",
+      "containerName": "rga-container",
+      "containerPort": 80
+    }
+  ],
+  "networkConfiguration": {
+    "awsvpcConfiguration": {
+      "subnets": [
+        "subnet-08d2cde7010ab9b13",
+        "subnet-0e02ea4a590514a61"
+      ],
+      "securityGroups": [
+        "sg-08ab4afbbdbe482ae"
+      ]
+    }
+  },
+  "healthCheckGracePeriodSeconds": 30,
+  "serviceRegistries": [
+    {
+      "registryArn": "servicediscovery:us-east-1:343755987196:service/srv-7panefqbf6ohpzvj",
+      "port": 80
+    }
+  ],
+  "desiredCount": 1,
+  "launchType": "FARGATE",
+  "platformVersion": "LATEST",
+  "schedulingStrategy": "REPLICA",
+  "deploymentController": {
+    "type": "ECS"
+  }
+}
