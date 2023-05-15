@@ -1,3 +1,5 @@
+
+https://docs.aws.amazon.com/AmazonECS/latest/developerguide/create-service-discovery.html
 aws servicediscovery create-private-dns-namespace \
       --name rga.com \
       --vpc vpc-06cb9af2070a1f70a
