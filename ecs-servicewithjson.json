@@ -23,7 +23,7 @@
   "serviceRegistries": [
     {
       "registryArn": "arn:aws:servicediscovery:us-east-1:343755987196:service/srv-7panefqbf6ohpzvj",
-      
+      "port": 8888
     }
   ],
   "desiredCount": 1,
