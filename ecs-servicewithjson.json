@@ -5,7 +5,7 @@
     {
       "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:343755987196:targetgroup/rga-target/30fe1cfc59976fcb",
       "containerName": "nginx",
-      "containerPort": 8888
+      "containerPort": 80
     }
   ],
   "networkConfiguration": {
