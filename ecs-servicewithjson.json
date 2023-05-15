@@ -22,8 +22,7 @@
   "healthCheckGracePeriodSeconds": 30,
   "serviceRegistries": [
     {
-      "registryArn": "arn:aws:servicediscovery:us-east-1:343755987196:service/srv-7panefqbf6ohpzvj",
-      "port": 8888
+      "registryArn": "arn:aws:servicediscovery:us-east-1:343755987196:service/srv-7panefqbf6ohpzvj"
     }
   ],
   "desiredCount": 1,
