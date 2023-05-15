@@ -1,5 +1,5 @@
 {
-    "family": "task-farget",
+    "family": "farget-test",
     "containerDefinitions": [
         {
             "name": "nginx1",
