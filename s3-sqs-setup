@@ -1,0 +1,54 @@
+2 steps process for rgs requirement
+
+1. when upload object to s3 bucket then call labdafunction and push to sqs with the requestid and s3presigned url.
+for accessing s3 bucket we have created api gateway and put object to s3 bucket.
+
+2. for testing using postman with apigatway url with bucket name and object name with put method.
+when you put the object it will store to s3 bucket.
+3. then lambda function get all info and push to cloudwatch and sqs.
+for this we need to configure
+4.lambda function proper function.
+1. s3 bucket event for lambda function
+2.lambda function 
+
+we followed below code and links
+Api gateway to object upload to s3
+https://repost.aws/knowledge-center/api-gateway-upload-image-s3
+
+----------------------------------
+import json
+import boto3
+
+s3_client = boto3.client('s3')
+sqs_client = boto3.client('sqs')
+sqs_queue_url = 'YOUR_SQS_QUEUE_URL'
+
+def lambda_handler(event, context):
+    for record in event['Records']:
+        bucket_name = record['s3']['bucket']['name']
+        object_key = record['s3']['object']['key']
+        request_id = record['s3']['object']['requestParameters']['requestId']
+        entity_tag = record['s3']['object']['eTag']
+        unique_id = generate_unique_id(object_key)
+        
+        message = {
+            'RequestId': request_id,
+            'UniqueId': unique_id,
+            'EntityTag': entity_tag
+        }
+        
+        response = sqs_client.send_message(
+            QueueUrl=sqs_queue_url,
+            MessageBody=json.dumps(message)
+        )
+
+    return {
+        'statusCode': 200,
+        'body': json.dumps('Messages sent to SQS successfully')
+    }
+
+def generate_unique_id(object_key):
+    # implement your logic to generate a unique identifier for the S3 object
+    return object_key.split('/')[-1].split('.')[0] + '-' + str(uuid.uuid4())
+
+===========================================
