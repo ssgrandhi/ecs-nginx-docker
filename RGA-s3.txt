@@ -1,0 +1,17 @@
+https://docs.aws.amazon.com/AmazonS3/latest/userguide/walkthrough1.html#walkthrough1-create-bucket
+https://docs.aws.amazon.com/AmazonS3/latest/userguide/example-walkthroughs-managing-access-example1.html
+
+https://www.youtube.com/watch?v=hXRu0x_G1ag&t=194s
+https://www.youtube.com/watch?v=H_rRlnSw_5s
+https://www.youtube.com/watch?v=VZTYQRbh0Kg
+
+https://www.c-sharpcorner.com/article/how-to-read-the-file-from-s3-bucket-using-lambda-function-with-python/
+https://www.gcptutorials.com/post/how-to-read-files-from-s3-using-python-aws-lambda
+
+https://docs.aws.amazon.com/AmazonS3/latest/userguide/tutorial-s3-object-lambda-uppercase.html#ol-upper-step4
+
+ERROR] UnicodeDecodeError: 'utf-8' codec can't decode byte 0xa0 in position 16: invalid start byte
+
+"errorType": "TypeError", s3 lambada function
+[ERROR] TypeError: string indices must be integers Traceback (most recent call last):
+https://medium.com/simple-thoughts-amplified/passing-variables-from-aws-api-gateway-to-lambda-3c5d8602081b
