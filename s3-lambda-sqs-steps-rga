@@ -1,0 +1,26 @@
+1.when you upload files to s3 trigger lamdafunction and push notification to sqs.
+
+refer lamdafile :  Lambda-final-function-sqs-s3
+
+
+requirements:
+1.s3bucket
+2.s3bucket--permission-enable lambda enents
+3.create lambda function and add the above script.
+4.in lambda function --permissions--->check role nameand add appropriate permissions.
+1.cloudwatch policy
+2.s3fullaccess
+3.lambadaexecute policy
+4.sqs sendmessage policy
+
+
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": "sqs:SendMessage",
+            "Resource": "arn:aws:sqs:us-east-1:343755987196:s3-requestedID"
+        }
+    ]
+}
