@@ -1,0 +1,58 @@
+import boto3
+import json
+
+def lambda_handler(event, context):
+    # Get the S3 bucket and key from the event
+    bucket_name = event['Records'][0]['s3']['bucket']['name']
+    file_key = event['Records'][0]['s3']['object']['key']
+    bucket_arn = event['Records'][0]['s3']['bucket']['arn']
+    file_arn = f"{bucket_arn}/{file_key}"
+    entity_tag = event['Records'][0]['s3']['object']['eTag']
+
+    if bucket_name != 'exampl123':
+        return {
+            'statusCode': 400,
+            'body': 'File not in correct bucket'
+        }
+
+    # Generate a presigned URL for the S3 object
+    s3_client = boto3.client('s3', region_name='ap-east-1', config=boto3.session.Config(signature_version='s3v4', s3={'addressing_style': 'virtual'}))
+    presigned_url = s3_client.generate_presigned_url(
+        'get_object',
+        Params={
+            'Bucket': bucket_name,
+            'Key': file_key
+        },
+        ExpiresIn=3600  # Expiration time in seconds
+    )
+
+    # Create an SQS client
+    sqs_client = boto3.client('sqs')
+
+    message = {
+        'bucket_name': bucket_name,
+        'file_key': file_key,
+        'file_arn': file_arn,
+        'presigned_url': presigned_url  # Include the presigned URL in the message
+    }
+
+    # Send a message to the SQS queue
+    response = sqs_client.send_message(
+        QueueUrl='https://sqs.us-east-1.amazonaws.com/343755987196/s3putrequest',
+        MessageBody=json.dumps(message),
+        MessageAttributes={
+            'EntityTag': {
+                'StringValue': entity_tag,
+                'DataType': 'String'
+            }
+        }
+    )
+
+    # Return a JSON response with the presigned URL
+    return {
+        'statusCode': 200,
+        'body': json.dumps({
+            'message': 'Message sent to SQS',
+            'presigned_url': presigned_url
+        })
+    }
